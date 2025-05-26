@@ -1,0 +1,52 @@
+# Visual Studio
+.vs/
+.vscode/
+
+# Папки сборки
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
+
+# Файлы пользовательских настроек VS
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Файлы кэша, временные и промежуточные файлы
+*.cache
+*.ilk
+*.pdb
+*.idb
+*.ipch
+*.log
+*.tlog/
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.temp
+
+# Файлы базы данных, если локальные (например, SQLite)
+*.db
+*.mdf
+*.ldf
+
+# Системные файлы Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS файлы (если вдруг кто работает на Mac)
+.DS_Store
+
+# Папки с зависимостями NuGet (если не хочешь коммитить пакеты)
+packages/
+*.nupkg
+.nuget/
+
+# Папки с настройками и кэшами тестов (если используются)
+TestResults/
