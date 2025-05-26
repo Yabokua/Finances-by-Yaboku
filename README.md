@@ -4,10 +4,10 @@ A small and easy-to-use application for keeping track of your expenses, working 
 
 ## How to run the app
 
-Run `Start_wf` in the main folder  
+Run `Start_wf` in the main folder  (after build)
 or  
-`finance_by_Yaboku\x64\Release\wf.exe`  
-(You need a database file; you can change its settings in `DB.cpp`)
+`finance_by_Yaboku\x64\Release\wf.exe` (after build)
+(You need to use a database; you can change its settings in `DB.cpp`)
 
 `/img/` - folder with background image file.
 
