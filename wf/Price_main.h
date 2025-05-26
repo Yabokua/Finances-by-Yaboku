@@ -130,6 +130,7 @@ namespace wf {
 			this->textBox_price->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->textBox_price->Font = (gcnew System::Drawing::Font(L"Segoe UI Semibold", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
+			this->textBox_price->ForeColor = System::Drawing::Color::White;
 			this->textBox_price->Location = System::Drawing::Point(9, 5);
 			this->textBox_price->Name = L"textBox_price";
 			this->textBox_price->Size = System::Drawing::Size(160, 26);
@@ -159,6 +160,7 @@ namespace wf {
 			this->textBox_descr->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->textBox_descr->Font = (gcnew System::Drawing::Font(L"Segoe UI Semibold", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
+			this->textBox_descr->ForeColor = System::Drawing::Color::White;
 			this->textBox_descr->Location = System::Drawing::Point(9, 3);
 			this->textBox_descr->Multiline = true;
 			this->textBox_descr->Name = L"textBox_descr";
@@ -240,6 +242,7 @@ namespace wf {
 			this->textBox_item->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->textBox_item->Font = (gcnew System::Drawing::Font(L"Segoe UI Semibold", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
+			this->textBox_item->ForeColor = System::Drawing::Color::White;
 			this->textBox_item->Location = System::Drawing::Point(9, 3);
 			this->textBox_item->Name = L"textBox_item";
 			this->textBox_item->Size = System::Drawing::Size(280, 26);
