@@ -83,8 +83,18 @@ System::Void wf::Price_main::linkLabel1_LinkClicked(System::Object^ sender, Syst
 	System::Diagnostics::Process::Start("https://github.com/Yabokua?tab=repositories");
 }
 
+void wf::Price_main::set_welcome_text() {
+	DB* db = new DB;
+	std::string user = db->get_username();
+	delete db;
+
+	System::String^ userManaged = gcnew System::String(user.c_str());
+	this->welcome_label->Text = System::String::Concat("Hi, ", userManaged, "!");
+}
+
 System::Void wf::Price_main::MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
 	this->ActiveControl = label_logo;
+	set_welcome_text();
 }
 
 System::Void wf::Price_main::necessary_basic_LinkClicked(System::Object^ sender, System::Windows::Forms::LinkLabelLinkClickedEventArgs^ e) {

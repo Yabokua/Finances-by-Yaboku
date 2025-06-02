@@ -35,6 +35,15 @@ System::Void wf::RegisterForm::register_Click(System::Object^ sender, System::Ev
 	textBox_login->Text = "";
 	textBox_pass->Text = "";
 	MessageBox::Show(this, "Account created!");
+
+	AppState::lastPosition = this->Location;
+
+	MyForm^ my_login = gcnew MyForm();
+	my_login->StartPosition = FormStartPosition::Manual;
+	my_login->Location = AppState::lastPosition;
+
+	this->Hide();
+	my_login->ShowDialog();
 };
 
 System::Void wf::RegisterForm::MyForm_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {

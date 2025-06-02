@@ -59,6 +59,9 @@ namespace wf {
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ label3;
+	private: System::Windows::Forms::Label^ welcome_label;
+	private: System::Windows::Forms::Label^ count_label;
+
 	private:
 		/// <summary>
 		/// Обязательная переменная конструктора.
@@ -87,6 +90,8 @@ namespace wf {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->welcome_label = (gcnew System::Windows::Forms::Label());
+			this->count_label = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
 			// 
 			// Close_btn
@@ -294,6 +299,29 @@ namespace wf {
 			this->label3->TabIndex = 24;
 			this->label3->Text = L"Date to:";
 			// 
+			// welcome_label
+			// 
+			this->welcome_label->AutoSize = true;
+			this->welcome_label->BackColor = System::Drawing::Color::Transparent;
+			this->welcome_label->Font = (gcnew System::Drawing::Font(L"Impact", 8));
+			this->welcome_label->ForeColor = System::Drawing::Color::White;
+			this->welcome_label->Location = System::Drawing::Point(553, 46);
+			this->welcome_label->Name = L"welcome_label";
+			this->welcome_label->Size = System::Drawing::Size(37, 15);
+			this->welcome_label->TabIndex = 25;
+			this->welcome_label->Text = L"label4";
+			// 
+			// count_label
+			// 
+			this->count_label->AutoSize = true;
+			this->count_label->BackColor = System::Drawing::Color::Transparent;
+			this->count_label->Font = (gcnew System::Drawing::Font(L"Impact", 10));
+			this->count_label->ForeColor = System::Drawing::Color::White;
+			this->count_label->Location = System::Drawing::Point(553, 61);
+			this->count_label->Name = L"count_label";
+			this->count_label->Size = System::Drawing::Size(0, 18);
+			this->count_label->TabIndex = 26;
+			// 
 			// Output
 			// 
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
@@ -301,6 +329,8 @@ namespace wf {
 			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->ClientSize = System::Drawing::Size(725, 486);
+			this->Controls->Add(this->count_label);
+			this->Controls->Add(this->welcome_label);
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
@@ -317,8 +347,9 @@ namespace wf {
 			this->Controls->Add(this->label1_logo);
 			this->DoubleBuffered = true;
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"Output";
-			this->Text = L"MyForm";
+			this->Text = L"Finance by Yaboku";
 			this->Load += gcnew System::EventHandler(this, &Output::MyForm_Load);
 			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Output::MyForm_MouseDown);
 			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Output::MyForm_MouseMove);
@@ -344,6 +375,8 @@ namespace wf {
 	private: System::Void checkBoxDateFilter_CheckedChanged(System::Object^ sender, System::EventArgs^ e);
 	public:  int get_from_comboBox(System::Windows::Forms::ComboBox^ cb);
 	public: System::Void listView1_ColumnClick(System::Object^ sender, ColumnClickEventArgs^ e);
+	public: void set_welcome_text();
+	public: void set_count_label();
 	};
 }
 

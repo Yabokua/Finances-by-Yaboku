@@ -7,9 +7,64 @@
 #include <iostream>
 #include <mysql/jdbc.h>
 #include <msclr/marshal_cppstd.h>
+#include <sstream>
+#include <iomanip>
+#include <fstream>
 
 using namespace System::Windows::Forms;
 
+std::string loadUsername();
+
+std::string username = loadUsername();
+
+void saveUsername(const std::string& username) {
+	std::ofstream ofs("username.txt");
+	if (ofs.is_open()) {
+		ofs << username;
+	}
+}
+
+std::string loadUsername() {
+	std::ifstream ifs("username.txt");
+	std::string usernameFromFile;
+	if (ifs.is_open()) {
+		std::getline(ifs, usernameFromFile);
+	}
+	return usernameFromFile;
+}
+
+void DB::ensure_tables_exist() {
+	try {
+		std::unique_ptr<sql::Statement> stmt(conn->createStatement());
+
+		std::string createUsersTable = R"(
+            CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                login VARCHAR(255) NOT NULL UNIQUE,
+                password VARCHAR(255) NOT NULL
+            )
+        )";
+
+		std::string createFinanceTable = R"(
+            CREATE TABLE IF NOT EXISTS finance (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                item_name VARCHAR(255) NOT NULL,
+                price DOUBLE NOT NULL,
+                description TEXT,
+                necessity INT NOT NULL,
+                date DATE DEFAULT CURRENT_DATE,
+				delete_str VARCHAR(255) DEFAULT '     X',
+                null_teminated VARCHAR(255)
+            )
+        )";
+
+		stmt->execute(createUsersTable);
+		stmt->execute(createFinanceTable);
+	}
+	catch (sql::SQLException& ex) {
+		std::cout << "Error ensuring tables exist: " << ex.what() << std::endl;
+	}
+}
 
 
 void DB::connect() {
@@ -17,11 +72,15 @@ void DB::connect() {
 		sql::mysql::MySQL_Driver* driver = sql::mysql::get_driver_instance();
 		conn = std::unique_ptr<sql::Connection>(driver->connect(SERVER, USER, PASSWORD));
 
-		if (conn) conn->setSchema(DATABASE);
-		else std::cout << "Error with connection" << std::endl;
+		std::unique_ptr<sql::Statement> stmt(conn->createStatement());
+		stmt->execute("CREATE DATABASE IF NOT EXISTS " + DATABASE);
+
+		conn->setSchema(DATABASE);
+
+		ensure_tables_exist();
 	}
 	catch (sql::SQLException& ex) {
-		std::cout << ex.what() << std::endl;
+		std::cout << "Connection error: " << ex.what() << std::endl;
 	}
 }
 
@@ -68,6 +127,10 @@ bool DB::get_user_from_db(System::String^ login, System::String^ password) {
 		res = std::unique_ptr<sql::ResultSet>(ptmt->executeQuery());
 
 		is_user_found = res->next();
+		if (is_user_found) {
+			username = user_login;
+			saveUsername(username);
+		}
 	}
 	catch (sql::SQLException& ex) {
 		std::cout << ex.what() << std::endl;
@@ -101,65 +164,7 @@ void DB::add_purchase(System::String^ item_name, double price, System::String^ d
 	DB::disconnect();
 }
 
-ListBox::ObjectCollection^ DB::purchase_list(int x) {//из этого можно сделать сортировку
-	DB::connect();
-
-	std::unique_ptr<sql::Statement> stmt(conn->createStatement());
-	std::unique_ptr<sql::ResultSet> res_data(stmt->executeQuery("SELECT * FROM finance"));
-
-	DB::disconnect();
-
-	if (!res_data->next()) return nullptr;
-
-	ListBox^ prcs_list = gcnew ListBox;
-
-	while (res_data->next()) {
-		System::String^ value = gcnew System::String(res_data->getString("item_name").c_str());
-		prcs_list->Items->Add(value);
-	}
-	return prcs_list->Items;
-}
-
-//System::Data::DataTable^ DB::get_all_db_data() {
-//	try {
-//		DB::connect();
-//
-//		std::string query = "SELECT * FROM finance";
-//		std::unique_ptr<sql::PreparedStatement> ptmt(conn->prepareStatement(query));
-//		std::unique_ptr<sql::ResultSet> res(ptmt->executeQuery());
-//
-//		// Создаем объект DataTable для хранения данных
-//		System::Data::DataTable^ dataTable = gcnew System::Data::DataTable();
-//
-//		// Заполняем заголовки столбцов
-//		int columnCount = res->getMetaData()->getColumnCount();
-//		for (int i = 1; i <= columnCount; i++) {
-//			dataTable->Columns->Add(gcnew System::String(res->getMetaData()->getColumnLabel(i).c_str()));
-//		}
-//
-//		// Заполняем строки
-//		while (res->next()) {
-//			System::Data::DataRow^ row = dataTable->NewRow();
-//			for (int i = 1; i <= columnCount; i++) {
-//				row[i - 1] = gcnew System::String(res->getString(i).c_str());
-//			}
-//			dataTable->Rows->Add(row);
-//		}
-//
-//		DB::disconnect(); // Закрываем соединение
-//		//dataGridView1->DataSource = dataTable;
-//
-//		return dataTable;
-//	}
-//	catch (sql::SQLException& ex) {
-//		std::cout << ex.what() << std::endl;
-//
-//	}
-//}
-
-
-
-void DB::loadDataIntoListView(ListView^ listView, int necssFilterValue, bool useDateFilter, System::DateTime fromDate, System::DateTime toDate) {
+void DB::loadDataIntoListView(ListView^ listView, int necssFilterValue, bool useDateFilter, System::DateTime fromDate, System::DateTime toDate, double& sum_count) {
 	listView->Items->Clear();
 	listView->Columns->Clear();
 	listView->View = View::Details;
@@ -184,7 +189,6 @@ void DB::loadDataIntoListView(ListView^ listView, int necssFilterValue, bool use
 
 	res = std::unique_ptr<sql::ResultSet>(ptmt->executeQuery());
 
-	// Заголовки
 	int columnCount = res->getMetaData()->getColumnCount();
 	for (int i = 2; i <= columnCount; i++) {
 		std::string columnName = res->getMetaData()->getColumnLabel(i);
@@ -199,7 +203,8 @@ void DB::loadDataIntoListView(ListView^ listView, int necssFilterValue, bool use
 		listView->Columns->Add(gcnew System::String(columnName.c_str()), -2, HorizontalAlignment::Left);
 	}
 
-	// Данные
+	sum_count = 0.0;
+
 	while (res->next()) {
 		int id = res->getInt(1);
 		System::String^ name = gcnew System::String(res->getString(2).c_str());
@@ -208,13 +213,32 @@ void DB::loadDataIntoListView(ListView^ listView, int necssFilterValue, bool use
 
 		for (int i = 3; i <= columnCount; i++) {
 			std::string value = res->getString(i);
+
+			if (i == 3) {//price
+				try {
+					double priceVal = std::stod(value);
+					sum_count += priceVal;
+
+					std::ostringstream oss;
+					if (priceVal == static_cast<int>(priceVal)) {
+						oss << static_cast<int>(priceVal);
+					}
+					else {
+						oss << std::fixed << std::setprecision(2) << priceVal;
+					}
+					value = oss.str();
+				}
+				catch (...) {
+				}
+			}
+
 			if (i == 4) { // necessity
 				if (value == "0") value = "Basic";
 				else if (value == "1") value = "Necessity";
 				else if (value == "2") value = "Not necessity";
 			}
 
-			if (i == 6) { // Description
+			if (i == 6) { // description
 				if (value.length() > 31) {
 					value = value.substr(0, 31) + "...";
 				}
@@ -222,13 +246,15 @@ void DB::loadDataIntoListView(ListView^ listView, int necssFilterValue, bool use
 
 			item->SubItems->Add(gcnew System::String(value.c_str()));
 		}
+
+
 		listView->Items->Add(item);
 	}
 
 	DB::disconnect();
+
 	listView->AutoResizeColumns(ColumnHeaderAutoResizeStyle::HeaderSize);
 }
-
 
 
 void DB::delete_string_by_id(int id) {
@@ -241,4 +267,8 @@ void DB::delete_string_by_id(int id) {
 
 	DB::disconnect();
 }
+
+std::string DB::get_username() {
+	return username;
+};
 

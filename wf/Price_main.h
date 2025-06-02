@@ -60,6 +60,7 @@ namespace wf {
 	private: System::Windows::Forms::LinkLabel^ necessity_necessity;
 	private: System::Windows::Forms::LinkLabel^ necessity_not_necessity;
 	private: System::Windows::Forms::Label^ label3;
+	private: System::Windows::Forms::Label^ welcome_label;
 
 	private:
 		/// <summary>
@@ -94,6 +95,7 @@ namespace wf {
 			this->necessity_necessity = (gcnew System::Windows::Forms::LinkLabel());
 			this->necessity_not_necessity = (gcnew System::Windows::Forms::LinkLabel());
 			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->welcome_label = (gcnew System::Windows::Forms::Label());
 			this->panel1->SuspendLayout();
 			this->panel2->SuspendLayout();
 			this->panel3->SuspendLayout();
@@ -357,6 +359,18 @@ namespace wf {
 			this->label3->TabIndex = 17;
 			this->label3->Text = L"Level of necessity";
 			// 
+			// welcome_label
+			// 
+			this->welcome_label->AutoSize = true;
+			this->welcome_label->BackColor = System::Drawing::Color::Transparent;
+			this->welcome_label->Font = (gcnew System::Drawing::Font(L"Impact", 8));
+			this->welcome_label->ForeColor = System::Drawing::Color::White;
+			this->welcome_label->Location = System::Drawing::Point(525, 46);
+			this->welcome_label->Name = L"welcome_label";
+			this->welcome_label->Size = System::Drawing::Size(37, 15);
+			this->welcome_label->TabIndex = 26;
+			this->welcome_label->Text = L"label4";
+			// 
 			// Price_main
 			// 
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
@@ -364,6 +378,7 @@ namespace wf {
 			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->ClientSize = System::Drawing::Size(725, 486);
+			this->Controls->Add(this->welcome_label);
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->necessity_not_necessity);
 			this->Controls->Add(this->necessity_necessity);
@@ -382,8 +397,9 @@ namespace wf {
 			this->Controls->Add(this->label1);
 			this->DoubleBuffered = true;
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"Price_main";
-			this->Text = L"MyForm";
+			this->Text = L"Finance by Yaboku";
 			this->Load += gcnew System::EventHandler(this, &Price_main::MyForm_Load);
 			this->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &Price_main::MyForm_MouseDown);
 			this->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &Price_main::MyForm_MouseMove);
@@ -412,5 +428,6 @@ namespace wf {
 	private: System::Void necessity_necessity_LinkClicked(System::Object^ sender, System::Windows::Forms::LinkLabelLinkClickedEventArgs^ e);
 	private: System::Void necessity_not_necessity_LinkClicked(System::Object^ sender, System::Windows::Forms::LinkLabelLinkClickedEventArgs^ e);
 	private: System::Void spending_htr_link_LinkClicked(System::Object^ sender, System::Windows::Forms::LinkLabelLinkClickedEventArgs^ e);
+	private: void wf::Price_main::set_welcome_text();
 };
 }

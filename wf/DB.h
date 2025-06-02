@@ -29,45 +29,12 @@ public:
 
 	void add_purchase(System::String^ item_name, double price, System::String^ description, int neces);
 
-	ListBox::ObjectCollection^ purchase_list(int x);// не юзаю
 
-	System::Data::DataTable^ get_all_db_data() {
-		try {
-			connect();
 
-			std::string query = "SELECT * FROM finance"; 
-			std::unique_ptr<sql::PreparedStatement> ptmt(conn->prepareStatement(query));
-			std::unique_ptr<sql::ResultSet> res(ptmt->executeQuery());
-
-			// Создаем объект DataTable для хранения данных
-			System::Data::DataTable^ dataTable = gcnew System::Data::DataTable();
-
-			// Заполняем заголовки столбцов
-			int columnCount = res->getMetaData()->getColumnCount();
-			for (int i = 1; i <= columnCount; i++) {
-				dataTable->Columns->Add(gcnew System::String(res->getMetaData()->getColumnLabel(i).c_str()));
-			}
-
-			// Заполняем строки
-			while (res->next()) {
-				System::Data::DataRow^ row = dataTable->NewRow();
-				for (int i = 1; i <= columnCount; i++) {
-					row[i - 1] = gcnew System::String(res->getString(i).c_str());
-				}
-				dataTable->Rows->Add(row);
-			}
-
-			disconnect(); // Закрываем соединение
-			//dataGridView1->DataSource = dataTable;
-
-			return dataTable;
-		}
-		catch (sql::SQLException& ex) {
-			std::cout << ex.what() << std::endl;
-
-		}
-	}
-
-	void loadDataIntoListView(System::Windows::Forms::ListView^ listView, int necssFilterValue, bool useDateFilter, System::DateTime fromDate, System::DateTime toDate);
+	void loadDataIntoListView(System::Windows::Forms::ListView^ listView, int necssFilterValue, bool useDateFilter, System::DateTime fromDate, System::DateTime toDate, double& sum_count);
 	void delete_string_by_id(int id);
+	std::string get_username();
+	double totalPrice;
+	double getTotalPrice() { return totalPrice; }
+	void ensure_tables_exist();
 }; 

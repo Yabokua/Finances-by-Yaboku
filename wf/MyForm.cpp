@@ -15,7 +15,6 @@ System::Void wf::MyForm::reg_link_LinkClicked(System::Object^ sender, System::Wi
 }
 
 System::Void wf::MyForm::button1_Click(System::Object^ sender, System::EventArgs^ e) {
-
 	String^ login = textBox_login->Text->Trim();
 	String^ pass = textBox_pass->Text->Trim();
 

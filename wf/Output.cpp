@@ -4,6 +4,17 @@
 #include "Output.h"
 #include "DB.h"
 
+double sum;
+
+void wf::Output::set_welcome_text() {
+	DB* db = new DB;
+	std::string user = db->get_username();
+	delete db;
+
+	System::String^ userManaged = gcnew System::String(user.c_str());
+	this->welcome_label->Text = System::String::Concat("Hi, ", userManaged, "!");
+}
+
 
 System::Void wf::Output::log_out_btn_LinkClicked(System::Object^ sender, System::Windows::Forms::LinkLabelLinkClickedEventArgs^ e) {
 	System::IO::File::Delete("stay_logged.txt");
@@ -45,6 +56,7 @@ System::Void wf::Output::linkLabel1_LinkClicked(System::Object^ sender, System::
 System::Void wf::Output::MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
 	this->ActiveControl = label1_logo;
 
+
 	if (comboBox1->Items->Count == 0) {
 		comboBox1->Items->Add("Basic");
 		comboBox1->Items->Add("Not necessity");
@@ -58,10 +70,12 @@ System::Void wf::Output::MyForm_Load(System::Object^ sender, System::EventArgs^ 
 
 		this->listView1->ColumnClick += gcnew ColumnClickEventHandler(this, &Output::listView1_ColumnClick);
 	}
+	set_welcome_text();
 }
 
 System::Void wf::Output::show_btn_Click(System::Object^ sender, System::EventArgs^ e) {
 	listView1->Items->Clear();
+
 
 	int selectedFilter = get_from_comboBox(this->comboBox1);
 
@@ -70,9 +84,15 @@ System::Void wf::Output::show_btn_Click(System::Object^ sender, System::EventArg
 	DateTime toDate = dateTimePickerTo->Value.Date;
 
 	DB* db = new DB;
-	db->loadDataIntoListView(listView1, selectedFilter, useDateFilter, fromDate, toDate);
+	db->loadDataIntoListView(listView1, selectedFilter, useDateFilter, fromDate, toDate, sum);
 	delete db;
+
+	set_count_label();
 }
+
+void wf::Output::set_count_label() {
+	this->count_label->Text = System::String::Concat("Total spend: ", sum);
+};
 
 System::Void wf::Output::purchase_link_Click(System::Object^ sender, System::EventArgs^ e) {
 	AppState::lastPosition = this->Location; 
@@ -185,5 +205,4 @@ System::Void wf::Output::listView1_ColumnClick(System::Object^ sender, ColumnCli
 	listView1->ListViewItemSorter = gcnew ListViewItemComparer(e->Column, sortAscending);
 	listView1->Sort();
 }
-
 
