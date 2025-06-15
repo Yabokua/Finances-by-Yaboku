@@ -61,6 +61,7 @@ namespace wf {
 	private: System::Windows::Forms::LinkLabel^ necessity_not_necessity;
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::Label^ welcome_label;
+	private: System::Windows::Forms::Label^ label4;
 
 	private:
 		/// <summary>
@@ -96,6 +97,7 @@ namespace wf {
 			this->necessity_not_necessity = (gcnew System::Windows::Forms::LinkLabel());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->welcome_label = (gcnew System::Windows::Forms::Label());
+			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->panel1->SuspendLayout();
 			this->panel2->SuspendLayout();
 			this->panel3->SuspendLayout();
@@ -371,6 +373,18 @@ namespace wf {
 			this->welcome_label->TabIndex = 26;
 			this->welcome_label->Text = L"label4";
 			// 
+			// label4
+			// 
+			this->label4->AutoSize = true;
+			this->label4->BackColor = System::Drawing::Color::Transparent;
+			this->label4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold));
+			this->label4->ForeColor = System::Drawing::SystemColors::InactiveCaption;
+			this->label4->Location = System::Drawing::Point(100, 252);
+			this->label4->Name = L"label4";
+			this->label4->Size = System::Drawing::Size(60, 13);
+			this->label4->TabIndex = 27;
+			this->label4->Text = L"(optional)";
+			// 
 			// Price_main
 			// 
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::None;
@@ -378,6 +392,7 @@ namespace wf {
 			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->ClientSize = System::Drawing::Size(725, 486);
+			this->Controls->Add(this->label4);
 			this->Controls->Add(this->welcome_label);
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->necessity_not_necessity);
